@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -61,5 +62,9 @@ def predict(data:PredictionInput):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/")
+def read_root():
+       # Serve a custom HTML file as the root page
+       return FileResponse("static/base.html")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
