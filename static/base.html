@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leftout Prediction Form</title>
+    <style>
+        body {
+
+            font-family: Arial, sans-serif; /* Sets a clean and modern font */
+            background-color: #f4f4f4; /* Light gray background */
+            color: #333; /* Dark gray text */
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Center-align vertically */
+            align-items: center; /* Center-align horizontally */
+            height: 125vh; /* Full viewport height */
+            margin: 0; /* Remove default margin */
+        }
+
+        form{
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        h1{
+            color: #4caf50;
+        }
+
+        label{
+            display: table-cell;
+            margin-bottom: 10px;
+            font-weight: bolder;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select{
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 2px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #10c32b;
+        }
+
+        .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert.error {
+    background-color: #f8d7da; /* Light red for errors */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Red border */
+}
+
+.alert.success {
+    background-color: #d4edda; /* Light green for success */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Green border */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    form {
+        width: 90%; /* Slightly wider form on small screens */
+        padding: 15px; /* Less padding on small screens */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>Employee Leftout Prediction Form</h1>
+    <form id="predictionForm">
+        <!-- Form fields should match PredictionInput model -->
+
+        <label for="CAMP">CAMP:</label>
+        <input type="text" id="CAMP" name="CAMP" required><br><br>
+
+        <label for="GENDER">Gender:</label>
+        <select id="GENDER" name="GENDER" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br><br>
+
+        <label for="RELIGION">Religion:</label>
+        <select id="RELIGION" name="RELIGION" required>
+            <option value="HINDU">HINDU</option>
+            <option value="MUSLIM">MUSLIM</option>
+            <option value="CHRISTIAN">CHRISTIAN</option>
+            <option value="DEFAULT">DEFAULT</option>
+        </select><br><br>
+
+        <label for="MARITAL_STATUS">Marital Status:</label>
+        <select id="MARITAL_STATUS" name="MARITAL_STATUS" required>
+            <option value="Married">Married</option>
+            <option value="Single">Single</option>
+        </select><br><br>
+
+
+        <label for="HOSTEL">Hostel:</label>
+        <select id="HOSTEL" name="HOSTEL" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br><br>
+
+        <label for="PREVIOUS_EXPERIENCE">Previous Experience:</label>
+        <select id="PREVIOUS_EXPERIENCE" name="PREVIOUS_EXPERIENCE" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br><br>
+
+        <label for="NOF_YEARS">Number of Years:</label>
+        <input type="text" id="NOF_YEARS" name="NOF_YEARS" required><br><br>
+
+        <label for="EXPERIENCE_FIELD">Experience Field:</label>
+        <input type="text" id="EXPERIENCE_FIELD" name="EXPERIENCE_FIELD" required><br><br>
+
+        <label for="BASIC_EARNED">Basic Earned:</label>
+        <input type="number" id="BASIC_EARNED" name="BASIC_EARNED" required><br><br>
+
+        <label for="GRADE">Grade:</label>
+        <input type="text" id="GRADE" name="GRADE" required><br><br>
+
+        <label for="BRANCH">Branch:</label>
+        <input type="text" id="BRANCH" name="BRANCH" required><br><br>
+
+        <label for="SECTION">Section:</label>
+        <input type="text" id="SECTION" name="SECTION"><br><br>
+
+        <label for="DESIGNATION">Designation:</label>
+        <input type="text" id="DESIGNATION" name="DESIGNATION" required><br><br>
+
+        <label for="CURRENT_BASIC">Current Basic:</label>
+        <input type="number" id="CURRENT_BASIC" name="CURRENT_BASIC" step="any" required><br><br>
+
+        <label for="AGE">AGE:</label>
+        <input type="number" id="AGE" name="AGE" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById("predictionForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch("http://127.0.0.1:8000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.prediction !== undefined) {
+                    alert(`Prediction result: ${result.prediction}`);
+                } else {
+                    alert("Unexpected response format");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Check the console for details.");
+            });
+        });
+    </script>
+</body>
+</html>
